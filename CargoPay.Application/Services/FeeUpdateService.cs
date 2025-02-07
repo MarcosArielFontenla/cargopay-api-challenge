@@ -13,7 +13,7 @@ namespace CargoPay.Application.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                UpdateFeeRate();
+                await Task.Run(() => UpdateFeeRate(), stoppingToken);
                 await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
             }
         }
