@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BC936FA7-E548-4571-8645-CBD6009A025F}"
 EndProject
@@ -26,6 +26,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CargoPay.Infrastructure", "CargoPay.Infrastructure\CargoPay.Infrastructure.csproj", "{55F484C7-4B4A-437E-92B3-3DCE5FC28C04}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CargoPay.Presentation", "CargoPay.Presentation\CargoPay.Presentation.csproj", "{9DD56684-1227-4855-B8F0-140927D142E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CargoPay.Tests", "CargoPay.Tests\CargoPay.Tests.csproj", "{889085CA-6450-44D3-9F40-ED1F89AD719C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{9DD56684-1227-4855-B8F0-140927D142E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DD56684-1227-4855-B8F0-140927D142E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DD56684-1227-4855-B8F0-140927D142E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{889085CA-6450-44D3-9F40-ED1F89AD719C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{889085CA-6450-44D3-9F40-ED1F89AD719C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{889085CA-6450-44D3-9F40-ED1F89AD719C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{889085CA-6450-44D3-9F40-ED1F89AD719C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,5 +74,6 @@ Global
 		{29F80EB9-64DD-4C4B-8E97-AB4220B94643} = {EA33A99B-68C8-4F95-81C8-20E950E85C26}
 		{55F484C7-4B4A-437E-92B3-3DCE5FC28C04} = {C09C9727-8FB9-4B77-B809-354ABACBB6AC}
 		{9DD56684-1227-4855-B8F0-140927D142E1} = {1C394038-5839-4F20-8691-75F5AD674165}
+		{889085CA-6450-44D3-9F40-ED1F89AD719C} = {A8A2B054-7A7D-4A29-ACEC-935674F18C8F}
 	EndGlobalSection
 EndGlobal
