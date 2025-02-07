@@ -25,28 +25,28 @@ namespace CargoPay.Application.Services
 
         public async Task<decimal> GetCardBalanceAsync(string cardNumber)
         {
-            var card = await _cardRepository.GetCardByNumberAsync(cardNumber);
+            var cardBalance = await _cardRepository.GetCardByNumberAsync(cardNumber);
 
-            if (card == null)
+            if (cardBalance < 0)
                 throw new KeyNotFoundException("Card not found.");
 
-            return card.Balance;
+            return cardBalance;
         }
 
         public async Task PayAsync(string cardNumber, decimal amount)
         {
             var feeRate = await _paymentFeeService.GetCurrentFeeRateAsync();
             var totalPayment = amount + (amount * feeRate);
-            var card = await _cardRepository.GetCardByNumberAsync(cardNumber);
+            var cardBalance = await _cardRepository.GetCardByNumberAsync(cardNumber);
             
-            if (card == null)
+            if (cardBalance == null)
                 throw new KeyNotFoundException("Card not found.");
 
-            if (card.Balance < totalPayment)
+            if (cardBalance < totalPayment)
                 throw new InvalidOperationException("Insufficient balance.");
 
-            card.Balance -= totalPayment;
-            await _cardRepository.UpdateCardBalanceAsync(cardNumber, card.Balance);
+            cardBalance -= totalPayment;
+            await _cardRepository.UpdateCardBalanceAsync(cardNumber, cardBalance);
         }
     }
 }

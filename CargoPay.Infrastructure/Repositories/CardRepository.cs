@@ -14,12 +14,14 @@ namespace CargoPay.Infrastructure.Repositories
             _context = dbContext;
         }
 
-        public async Task<Card> GetCardByNumberAsync(string cardNumber)
+        public async Task<decimal> GetCardByNumberAsync(string cardNumber)
         {
             try
             {
-                var card = await _context.Cards.FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
-                return card;
+                var cardBalance = await _context.Cards.Where(c => c.CardNumber == cardNumber)
+                                               .Select(c => c.Balance)
+                                               .FirstOrDefaultAsync();
+                return cardBalance;
 
             }
             catch (Exception ex)

@@ -1,11 +1,12 @@
 ﻿using CargoPay.Application.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CargoPay.Presentation.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
     public class PaymentFeesController : ControllerBase
     {
         private readonly IPaymentFeeService _paymentFeeService;
@@ -23,10 +24,8 @@ namespace CargoPay.Presentation.Controllers
         public async Task<IActionResult> GetCurrentFeeRate()
         {
             var feeRate = await _paymentFeeService.GetCurrentFeeRateAsync();
-            return Ok(new
-            {
-                FeeRate = feeRate
-            });
+
+            return Ok(new { FeeRate = feeRate });
         }
     }
 }

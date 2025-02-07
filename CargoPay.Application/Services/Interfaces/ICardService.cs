@@ -1,5 +1,4 @@
-﻿using CargoPay.Application.DTOs;
-using CargoPay.Domain.Entities;
+﻿using CargoPay.Domain.Entities;
 
 namespace CargoPay.Application.Services.Interfaces
 {
