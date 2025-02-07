@@ -14,13 +14,13 @@ namespace CargoPay.Infrastructure.Repositories
             _context = dbContext;
         }
 
-        public async Task<decimal> GetCardByNumberAsync(string cardNumber)
+        public async Task<decimal> GetCardBalanceByCardNumber(string cardNumber)
         {
             try
             {
                 var cardBalance = await _context.Cards.Where(c => c.CardNumber == cardNumber)
-                                               .Select(c => c.Balance)
-                                               .FirstOrDefaultAsync();
+                                                      .Select(c => c.Balance)
+                                                      .FirstOrDefaultAsync();
                 return cardBalance;
 
             }
@@ -30,7 +30,36 @@ namespace CargoPay.Infrastructure.Repositories
             }
         }
 
-        public async Task<Card> CreateCardAsync(string cardNumber, decimal initialBalance)
+        public async Task<decimal> GetCardBalanceByCardId(int id)
+        {
+            try
+            {
+                var cardBalance = await _context.Cards.Where(c => c.Id == id)
+                                                      .Select(c => c.Balance)
+                                                      .FirstOrDefaultAsync();
+
+                return cardBalance;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException($"Card with id: {id} not found!", ex);
+            }
+        }
+
+        public async Task<List<Card>> GetAllCards()
+        {
+            try
+            {
+                var cards = await _context.Cards.AsNoTracking().ToListAsync();
+                return cards;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Cards not found", ex);
+            }
+        }
+
+        public async Task<Card> CreateCard(string cardNumber, decimal initialBalance)
         {
             try
             {
@@ -50,7 +79,7 @@ namespace CargoPay.Infrastructure.Repositories
             }
         }
 
-        public async Task UpdateCardBalanceAsync(string cardNumber, decimal newBalance)
+        public async Task UpdateCardBalance(string cardNumber, decimal newBalance)
         {
             try
             {

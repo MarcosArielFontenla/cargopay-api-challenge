@@ -21,10 +21,9 @@ namespace CargoPay.Presentation.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("current-fee")]
-        public async Task<IActionResult> GetCurrentFeeRate()
+        public async Task<ActionResult> GetCurrentFeeRate()
         {
             var feeRate = await _paymentFeeService.GetCurrentFeeRateAsync();
-
             return Ok(new { FeeRate = feeRate });
         }
     }

@@ -15,38 +15,37 @@ namespace CargoPay.Application.Services
             _paymentFeeService = paymentFeeService;
         }
 
-        public async Task<Card> CreateCardAsync(string cardNumber, decimal initialBalance)
+        public async Task<Card> CreateCardAsync(CreateCardRequest request)
         {
-            if (cardNumber.Length != 15 || !long.TryParse(cardNumber, out _))
-                throw new ArgumentException("Invalid card number format.");
-
-            return await _cardRepository.CreateCardAsync(cardNumber, initialBalance);
+            return await _cardRepository.CreateCard(request.CardNumber, request.InitialBalance);
         }
 
-        public async Task<decimal> GetCardBalanceAsync(string cardNumber)
+        public async Task<decimal> GetCardBalanceByCardNumberAsync(string cardNumber)
         {
-            var cardBalance = await _cardRepository.GetCardByNumberAsync(cardNumber);
-
-            if (cardBalance < 0)
-                throw new KeyNotFoundException("Card not found.");
-
-            return cardBalance;
+            return await _cardRepository.GetCardBalanceByCardNumber(cardNumber);
         }
 
-        public async Task PayAsync(string cardNumber, decimal amount)
+        public async Task<decimal> GetCardBalanceByCardIdAsync(int id)
+        {
+            return await _cardRepository.GetCardBalanceByCardId(id);
+        }
+
+        public async Task<List<Card>> GetAllCardsAsync()
+        {
+            return await _cardRepository.GetAllCards();
+        }
+
+        public async Task PayAsync(PaymentRequest request)
         {
             var feeRate = await _paymentFeeService.GetCurrentFeeRateAsync();
-            var totalPayment = amount + (amount * feeRate);
-            var cardBalance = await _cardRepository.GetCardByNumberAsync(cardNumber);
-            
-            if (cardBalance == null)
-                throw new KeyNotFoundException("Card not found.");
+            var totalPayment = request.Amount + (request.Amount * feeRate);
+            var cardBalance = await _cardRepository.GetCardBalanceByCardNumber(request.CardNumber);
 
             if (cardBalance < totalPayment)
                 throw new InvalidOperationException("Insufficient balance.");
 
             cardBalance -= totalPayment;
-            await _cardRepository.UpdateCardBalanceAsync(cardNumber, cardBalance);
+            await _cardRepository.UpdateCardBalance(request.CardNumber, cardBalance);
         }
     }
 }

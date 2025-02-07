@@ -41,8 +41,8 @@ namespace CargoPay.Presentation.Controllers
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, username)
-        };
+                new Claim(ClaimTypes.Name, username)
+            };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

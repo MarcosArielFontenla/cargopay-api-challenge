@@ -1,4 +1,5 @@
 ﻿using CargoPay.Application.Services.Interfaces;
+using CargoPay.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,51 +20,34 @@ namespace CargoPay.Presentation.Controllers
         /// <summary>
         /// Creation of a new card assigning an initial balance.
         /// </summary>
-        /// <param name="cardNumber"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        public async Task<IActionResult> CreateCard([FromBody] string cardNumber, decimal initialBalance)
+        public async Task<ActionResult> CreateCard(CreateCardRequest request)
         {
-            if (string.IsNullOrEmpty(cardNumber) || cardNumber.Length != 15 || !long.TryParse(cardNumber, out _))
-                return BadRequest("the cardNumber must have 15 digits.");
-
-            if (initialBalance < 0)
-                throw new ArgumentOutOfRangeException("The initialBalance cant be negative!");
-
-            var card = await _cardService.CreateCardAsync(cardNumber, initialBalance);
+            var createdCard = await _cardService.CreateCardAsync(request);
 
             return Ok(new 
             { 
-                Message = "¡Card created successfully!.",
-                Card = card
+                Message = "¡Card created successfully!",
+                Card = createdCard
             });
         }
 
         /// <summary>
         /// Realize A payment by applying a fee to the amount entered.
         /// </summary>
-        /// <param name="cardNumber"></param>
-        /// <param name="amount"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("{cardNumber}/pay")]
-        public async Task<IActionResult> Pay(string cardNumber, [FromBody] decimal amount)
+        [HttpPost("pay")]
+        public async Task<ActionResult> Pay(PaymentRequest request)
         {
-            try
+            await _cardService.PayAsync(request);
+
+            return Ok(new
             {
-                await _cardService.PayAsync(cardNumber, amount);
-                return Ok(new
-                {
-                    Message = "Payment was successful!"
-                });
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("The card doesnt exist.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+                Message = "Payment was successful!"
+            });
         }
 
         /// <summary>
@@ -71,22 +55,42 @@ namespace CargoPay.Presentation.Controllers
         /// </summary>
         /// <param name="cardNumber"></param>
         /// <returns></returns>
-        [HttpGet("{cardNumber}/balance")]
-        public async Task<IActionResult> GetCardBalance(string cardNumber)
+        [HttpGet("by-number/{cardNumber}/balance")]
+        public async Task<ActionResult> GetCardBalanceByCardNumber(string cardNumber)
         {
-            try
-            {
-                var balance = await _cardService.GetCardBalanceAsync(cardNumber);
+            var balance = await _cardService.GetCardBalanceByCardNumberAsync(cardNumber);
 
-                return Ok(new
-                {
-                    Balance = balance
-                });
-            }
-            catch (KeyNotFoundException)
+            return Ok(new
             {
-                return NotFound("The card doesnt exist.");
-            }
+                Balance = balance
+            });
+        }
+
+        /// <summary>
+        /// Returns card balance by card id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("by-id/{id}/balance")]
+        public async Task<ActionResult> GetCardBalanceByCardId(int id)
+        {
+            var balance = await _cardService.GetCardBalanceByCardIdAsync(id);
+
+            return Ok(new
+            {
+                Balance = balance
+            });
+        }
+
+        /// <summary>
+        /// Retrieves all cards.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("cards")]
+        public async Task<ActionResult<List<Card>>> GetAllCards()
+        {
+            var cards = await _cardService.GetAllCardsAsync().ConfigureAwait(false);
+            return Ok(cards);
         }
     }
 }

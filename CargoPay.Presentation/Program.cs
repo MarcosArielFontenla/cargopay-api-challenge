@@ -3,7 +3,6 @@ using CargoPay.Application.Services.Interfaces;
 using CargoPay.Infrastructure.Data;
 using CargoPay.Infrastructure.Repositories;
 using CargoPay.Infrastructure.Repositories.Interfaces;
-using CargoPay.Presentation.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;

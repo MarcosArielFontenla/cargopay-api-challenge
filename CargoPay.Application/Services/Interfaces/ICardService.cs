@@ -4,8 +4,10 @@ namespace CargoPay.Application.Services.Interfaces
 {
     public interface ICardService
     {
-        Task<Card> CreateCardAsync(string cardNumber, decimal balance);
-        Task PayAsync(string cardNumber, decimal amount);
-        Task<decimal> GetCardBalanceAsync(string cardNumber);
+        Task<Card> CreateCardAsync(CreateCardRequest request);
+        Task PayAsync(PaymentRequest request);
+        Task<decimal> GetCardBalanceByCardNumberAsync(string cardNumber);
+        Task<decimal> GetCardBalanceByCardIdAsync(int id);
+        Task<List<Card>> GetAllCardsAsync();
     }
 }
