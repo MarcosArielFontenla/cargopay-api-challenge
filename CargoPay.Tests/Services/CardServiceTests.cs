@@ -126,6 +126,21 @@ namespace CargoPay.Tests.Services
         }
 
         [Fact]
+        public async Task GetCardBalanceByCardId_Should_ReturnsBalanceSuccessfully()
+        {
+            // Arrange
+            int cardId = 1;
+
+            _mockCardRepository.Setup(r => r.GetCardBalanceByCardId(cardId)).ReturnsAsync(1m);
+
+            // Act
+            var result = await _cardService.GetCardBalanceByCardIdAsync(cardId);
+
+            // Assert
+            Assert.Equal(1m, result);
+        }
+
+        [Fact]
         public async Task GetAllCardsAsync_Should_ReturnsFullList()
         {
             // Arrange

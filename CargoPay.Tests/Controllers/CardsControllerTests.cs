@@ -3,8 +3,6 @@ using CargoPay.Domain.Entities;
 using CargoPay.Presentation.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Newtonsoft.Json;
-using System;
 
 namespace CargoPay.Tests.Controllers
 {
@@ -48,7 +46,7 @@ namespace CargoPay.Tests.Controllers
         }
 
         [Fact]
-        public async Task Pay_ShouldReturn_PaymentSuccessfull()
+        public async Task Pay_Should_ReturnPaymentSuccessfull()
         {
             // Arrange
             var request = new PaymentRequest 
