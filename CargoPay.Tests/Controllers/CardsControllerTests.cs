@@ -148,5 +148,43 @@ namespace CargoPay.Tests.Controllers
             Assert.Single(cards);
             Assert.Equal("111122223333444", cards[0].CardNumber);
         }
+
+        [Fact]
+        public async Task RechargeBalance_Should_ReturnSuccessMessage()
+        {
+            // Arrange
+            var request = new RechargeBalanceRequest
+            {
+                CardNumber = "123456789012345",
+                Amount = 100
+            };
+
+            _mockCardService.Setup(s => s.RechargeBalanceAsync(request))
+                            .ReturnsAsync(true);
+
+            // Act
+            var result = await _cardsController.RechargeBalance(request);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.NotNull(okResult.Value);
+        }
+
+        [Fact]
+        public async Task DeleteCard_Should_ReturnSuccessMessage()
+        {
+            // Arrange
+            int cardId = 1;
+
+            _mockCardService.Setup(s => s.DeleteCardAsync(cardId))
+                            .ReturnsAsync(true);
+
+            // Act
+            var result = await _cardsController.DeleteCard(cardId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.NotNull(okResult.Value);
+        }
     }
 }
