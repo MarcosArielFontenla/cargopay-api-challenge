@@ -47,5 +47,15 @@ namespace CargoPay.Application.Services
             cardBalance -= totalPayment;
             await _cardRepository.UpdateCardBalance(request.CardNumber, cardBalance);
         }
+
+        public async Task<bool> RechargeBalanceAsync(RechargeBalanceRequest request)
+        {
+            return await _cardRepository.RechargeBalance(request);
+        }
+
+        public async Task<bool> DeleteCardAsync(int id)
+        {
+            return await _cardRepository.DeleteCard(id);
+        }
     }
 }

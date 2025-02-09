@@ -9,5 +9,7 @@ namespace CargoPay.Infrastructure.Repositories.Interfaces
         Task<decimal> GetCardBalanceByCardId(int id);
         Task<List<Card>> GetAllCards();
         Task UpdateCardBalance(string cardNumber, decimal newBalance);
+        Task<bool> RechargeBalance(RechargeBalanceRequest request);
+        Task<bool> DeleteCard(int id);
     }
 }

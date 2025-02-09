@@ -92,5 +92,37 @@ namespace CargoPay.Presentation.Controllers
             var cards = await _cardService.GetAllCardsAsync().ConfigureAwait(false);
             return Ok(cards);
         }
+
+        /// <summary>
+        /// Recharge the balance of a card.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("recharge-balance")]
+        public async Task<ActionResult> RechargeBalance(RechargeBalanceRequest request)
+        {
+            await _cardService.RechargeBalanceAsync(request);
+
+            return Ok(new
+            {
+                Message = "Balance recharged successfully!"
+            });
+        }
+
+        /// <summary>
+        /// Delete a card.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCard(int id)
+        {
+            await _cardService.DeleteCardAsync(id);
+
+            return Ok(new
+            {
+                Message = "Card deleted successfully!"
+            });
+        }
     }
 }
