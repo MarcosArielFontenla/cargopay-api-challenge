@@ -1,6 +1,7 @@
 ﻿using CargoPay.Application.Services.Interfaces;
 using CargoPay.Domain.Entities;
 using CargoPay.Presentation.Controllers;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -9,12 +10,23 @@ namespace CargoPay.Tests.Controllers
     public class CardsControllerTests
     {
         private readonly Mock<ICardService> _mockCardService;
+        private readonly Mock<IValidator<RechargeBalanceRequest>> _mockRechargeBalanceRequestValidator;
+        private readonly Mock<IValidator<PaymentRequest>> _mockPaymentRequestValidator;
+        private readonly Mock<IValidator<CreateCardRequest>> _mockCreateCardRequestValidator;
         private readonly CardsController _cardsController;
 
         public CardsControllerTests()
         {
             _mockCardService = new Mock<ICardService>();
-            _cardsController = new CardsController(_mockCardService.Object);
+            _mockRechargeBalanceRequestValidator = new Mock<IValidator<RechargeBalanceRequest>>();
+            _mockPaymentRequestValidator = new Mock<IValidator<PaymentRequest>>();
+            _mockCreateCardRequestValidator = new Mock<IValidator<CreateCardRequest>>();
+
+            _cardsController = new CardsController(
+                                                   _mockCardService.Object, 
+                                                   _mockRechargeBalanceRequestValidator.Object, 
+                                                   _mockPaymentRequestValidator.Object, 
+                                                   _mockCreateCardRequestValidator.Object);
         }
 
         [Fact]
@@ -33,6 +45,9 @@ namespace CargoPay.Tests.Controllers
                 CardNumber = request.CardNumber, 
                 Balance = request.InitialBalance 
             };
+
+            _mockCreateCardRequestValidator.Setup(v => v.ValidateAsync(request, default))
+                                           .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             _mockCardService.Setup(s => s.CreateCardAsync(request))
                             .ReturnsAsync(card);
@@ -54,6 +69,9 @@ namespace CargoPay.Tests.Controllers
                 CardNumber = "123456789012345", 
                 Amount = 50 
             };
+
+            _mockPaymentRequestValidator.Setup(v => v.ValidateAsync(request, default))
+                                        .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             _mockCardService.Setup(s => s.PayAsync(request)).Returns(Task.CompletedTask);
 
@@ -158,6 +176,9 @@ namespace CargoPay.Tests.Controllers
                 CardNumber = "123456789012345",
                 Amount = 100
             };
+
+            _mockRechargeBalanceRequestValidator.Setup(v => v.ValidateAsync(request, default))
+                                                .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             _mockCardService.Setup(s => s.RechargeBalanceAsync(request))
                             .ReturnsAsync(true);

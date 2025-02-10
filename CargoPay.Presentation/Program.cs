@@ -1,8 +1,10 @@
 using CargoPay.Application.Services;
 using CargoPay.Application.Services.Interfaces;
+using CargoPay.Domain.Validations;
 using CargoPay.Infrastructure.Data;
 using CargoPay.Infrastructure.Repositories;
 using CargoPay.Infrastructure.Repositories.Interfaces;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -83,6 +85,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddValidatorsFromAssemblyContaining<RechargeBalanceRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PaymentRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCardRequestValidator>();
 
 var app = builder.Build();
 

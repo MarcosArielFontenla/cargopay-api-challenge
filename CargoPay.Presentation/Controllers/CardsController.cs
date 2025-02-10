@@ -1,5 +1,6 @@
 ﻿using CargoPay.Application.Services.Interfaces;
 using CargoPay.Domain.Entities;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,20 @@ namespace CargoPay.Presentation.Controllers
     public class CardsController : ControllerBase
     {
         private readonly ICardService _cardService;
+        private readonly IValidator<RechargeBalanceRequest> _rechargeBalanceRequestValidator;
+        private readonly IValidator<PaymentRequest> _paymentRequestValidator;
+        private readonly IValidator<CreateCardRequest> _createCardRequestValidator;
 
-        public CardsController(ICardService cardService)
+        public CardsController(
+            ICardService cardService, 
+            IValidator<RechargeBalanceRequest> rechargeBalanceRequestValidator, 
+            IValidator<PaymentRequest> paymentRequestValidator,
+            IValidator<CreateCardRequest> createCardRequestValidator)
         {
             _cardService = cardService;
+            _rechargeBalanceRequestValidator = rechargeBalanceRequestValidator;
+            _paymentRequestValidator = paymentRequestValidator;
+            _createCardRequestValidator = createCardRequestValidator;
         }
 
         /// <summary>
@@ -25,6 +36,16 @@ namespace CargoPay.Presentation.Controllers
         [HttpPost("create")]
         public async Task<ActionResult> CreateCard(CreateCardRequest request)
         {
+            var validationResult = await _createCardRequestValidator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Message = "Validation error!",
+                    Errors = validationResult.Errors.Select(x => x.ErrorMessage)
+                });
+            }
             var createdCard = await _cardService.CreateCardAsync(request);
 
             return Ok(new 
@@ -42,6 +63,17 @@ namespace CargoPay.Presentation.Controllers
         [HttpPost("pay")]
         public async Task<ActionResult> Pay(PaymentRequest request)
         {
+            var validationResult = await _paymentRequestValidator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Message = "Validation error!",
+                    Errors = validationResult.Errors.Select(x => x.ErrorMessage)
+                });
+            }
+
             await _cardService.PayAsync(request);
 
             return Ok(new
@@ -101,6 +133,17 @@ namespace CargoPay.Presentation.Controllers
         [HttpPost("recharge-balance")]
         public async Task<ActionResult> RechargeBalance(RechargeBalanceRequest request)
         {
+            var validationResult = await _rechargeBalanceRequestValidator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Message = "Validation error!",
+                    Errors = validationResult.Errors.Select(x => x.ErrorMessage)
+                });
+            }
+
             await _cardService.RechargeBalanceAsync(request);
 
             return Ok(new
